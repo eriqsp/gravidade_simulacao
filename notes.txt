@@ -1,0 +1,35 @@
+FEITO > Definir classe do objeto massivo (ex: Sol, Terra, etc)
+    Aqui vou definir propriedades como massa, posição, velocidade e aceleração
+FEITO > Definir vetores posições e velocidades iniciais
+FEITO > Definir delta tempo e constante G
+FEITO > Iniciar OpenGL
+    . API para processar gráficos 2D e 3D
+    . Comunica direto com a GPU
+    . Desenha triangulos, linhas e pontos
+    Criar uma esfera inicial para um objeto
+FEITO > Iniciar Pygame
+    . Cria uma janela
+    . Lida com teclado, mouse e eventos
+    . Controla FPS
+    pygame.init()
+    pygame.display.set_mode((800, 600), DOUBLEBUF | OPENGL)
+FEITO > Testar se aparece esfera na janela do Pygame
+FEITO > Definir função aceleração usando gravitação universal Newton
+FEITO > Update posição, velocidade e aceleração
+    . Euler
+        . x(t+Δt) = x(t) + v(t) * Δt
+        . v(t+Δt) = v(t) + a(t) * Δt
+    . Método de Verlet (melhor)
+        . x(t+Δt) = x(t) + v(t)Δt + 0.5 * a(t) * Δt^2
+        . v(t+Δt) = v(t) + 0.5 * (a(t) + a(t+Δt)) * Δt
+FEITO > Coloca mais um objeto e testa novamente
+FEITO > Alterar OpenGL
+    . espaço 3D
+    . sombreamento nas esferas
+    . cores
+    . zoom in/out
+    . movimento do mouse para alterar a view
+    . traços das orbitas
+    . grid espaço-tempo (curvado)
+> Colocar planetas do sistema solar
+> Organizar o código
