@@ -31,7 +31,7 @@ def main():
     largura, altura = 800, 600
     pygame.display.set_mode((largura, altura), DOUBLEBUF | OPENGL)
 
-    init_opengl(largura, altura)
+    inicia_opengl(largura, altura)
 
     quadric, slices, stacks = objeto_inicio()
     clock = pygame.time.Clock()
@@ -45,41 +45,26 @@ def main():
 
     rodando = True
     while rodando:
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                rodando = False
-
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 4:
-                    zoom += 0.1
-                if event.button == 5:
-                    zoom -= 0.1
-                if zoom < 0.1:
-                    zoom = 0.1
-
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 4:
-                    camera_distance -= 0.5
-
-                if event.button == 5:
-                    camera_distance += 0.5
-
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                mouse_down = True
-
-            if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-                mouse_down = False
-
-            if event.type == pygame.MOUSEMOTION and mouse_down:
-                dx, dy = event.rel
-                rot_y += dx * 0.5
-                rot_x += dy * 0.5
-
-            camera_distance = max(3, min(camera_distance, 50))
+        # guarda variaveis de zoom e fov em dicionario
+        fov_control = {
+            'zoom': zoom,
+            'camera_distance': camera_distance,
+            'mouse_down': mouse_down,
+            'rot_y': rot_y,
+            'rot_x': rot_x
+        }
+        rodando, fov_control = pygame_eventos(rodando, fov_control)
 
         if rodando is False: break
 
-        angulo += 60 * clock.get_time() / 1000  # mantem a esfera rotacionando
+        # recupera as variaveis de fov atualizadas
+        zoom = fov_control['zoom']
+        camera_distance = fov_control['camera_distance']
+        mouse_down = fov_control['mouse_down']
+        rot_y = fov_control['rot_y']
+        rot_x = fov_control['rot_x']
+
+        angulo += 60 * clock.get_time() / 1000  # mantem a esfera rotacionando em torno do proprio eixo
         dt = 0.01  # intervalo de tempo entre iteracoes no algoritmo de Verlet
 
         # reinicia matriz a cada iteracao
@@ -111,7 +96,7 @@ def main():
     pygame.quit()
 
 
-def init_opengl(largura: int, altura: int):
+def inicia_opengl(largura: int, altura: int):
     # inicia ambiente
     glEnable(GL_DEPTH_TEST)
     glClearColor(0.0, 0.0, 0.0, 1.0)
@@ -169,6 +154,42 @@ def desenha_rastro(pontos):
 
     glEnable(GL_DEPTH_TEST)
     glEnable(GL_LIGHTING)
+
+
+# esses eventos do pygame permitem a interacao com a janela, como dar zoom e mudar perspectiva
+def pygame_eventos(rodando: bool, fov_control: dict):
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            rodando = False
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 4:
+                fov_control['zoom'] += 0.1
+            if event.button == 5:
+                fov_control['zoom'] -= 0.1
+            if fov_control['zoom'] < 0.1:
+                fov_control['zoom'] = 0.1
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 4:
+                fov_control['camera_distance'] -= 0.5
+
+            if event.button == 5:
+                fov_control['camera_distance'] += 0.5
+
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            fov_control['mouse_down'] = True
+
+        if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+            fov_control['mouse_down'] = False
+
+        if event.type == pygame.MOUSEMOTION and fov_control['mouse_down']:
+            dx, dy = event.rel
+            fov_control['rot_y'] += dx * 0.5
+            fov_control['rot_x'] += dy * 0.5
+
+        fov_control['camera_distance'] = max(3, min(fov_control['camera_distance'], 50))
+    return rodando, fov_control
 
 
 if __name__ == "__main__":
