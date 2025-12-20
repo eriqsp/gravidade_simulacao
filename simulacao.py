@@ -6,88 +6,30 @@ from corpo_massivo import Corpo
 from fisica import *
 
 
-def init_opengl(largura, altura):
-    # inicia ambiente
-    glEnable(GL_DEPTH_TEST)
-    glClearColor(0.0, 0.0, 0.0, 1.0)
-
-    glMatrixMode(GL_PROJECTION)
-    glLoadIdentity()
-
-    gluPerspective(45, largura / altura, 0.1, 100.0)
-    glMatrixMode(GL_MODELVIEW)
-
-    # habilita luz
-    glEnable(GL_LIGHTING)
-    glEnable(GL_LIGHT0)
-    glEnable(GL_COLOR_MATERIAL)
-
-    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
-
-    glLightfv(GL_LIGHT0, GL_POSITION, (5.0, 5.0, 5.0, 1.0))
-    glLightfv(GL_LIGHT0, GL_AMBIENT, (0.2, 0.2, 0.2, 1.0))
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, (0.8, 0.8, 0.8, 1.0))
-    glLightfv(GL_LIGHT0, GL_SPECULAR, (1.0, 1.0, 1.0, 1.0))
-
-    # transparencia
-    glEnable(GL_BLEND)
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-
-
-def objeto_inicio(slices=20, stacks=20):
-    quadric = gluNewQuadric()
-    gluQuadricNormals(quadric, GLU_SMOOTH)
-    return quadric, slices, stacks
-
-
-def cria_esfera(quadric, raio, slices, stacks, angulo, posicao, cor):
-    glPushMatrix()
-    glTranslatef(*posicao)
-    glRotatef(angulo, 0, 1, 0)
-    glColor3f(*cor)
-    gluSphere(quadric, raio, slices, stacks)
-    glPopMatrix()
-
-
-def desenha_rastro(pontos):
-    if len(pontos) < 2:
-        return
-
-    glDisable(GL_LIGHTING)
-    glDisable(GL_DEPTH_TEST)
-
-    glColor3f(1.0, 1.0, 1.0)
-    glBegin(GL_LINE_STRIP)
-    for p in pontos:
-        glVertex3f(p[0], p[1], p[2])
-    glEnd()
-
-    glEnable(GL_DEPTH_TEST)
-    glEnable(GL_LIGHTING)
-
-
 def main():
-    pygame.init()
-    largura, altura = 1600, 1200
-    pygame.display.set_mode((largura, altura), DOUBLEBUF | OPENGL)
-
+    # referencia Terra
     massa = 1
     raio = 0.2
     distancia = 25.0
+    g = 1.0  # constante gravitacao Newton
 
-    objetos = [
+    corpos = [
         Corpo(massa * 300, np.array([1.0, 1.0, 0.0]), raio * 6, [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]),  # Sol
         Corpo(massa, np.array([0.2, 0.4, 0.8]), raio, [distancia, 0.0, 0.0], [0.0, 1.1, 0.0]),  # Terra
         Corpo(massa * 0.1, np.array([0.8, 0.3, 0.2]), raio * 0.5, [distancia * 1.5, 0.0, 0.0], [0.0, -1.1, 0.0]),  # Marte
         Corpo(massa * 10, np.array([0.8, 0.6, 0.4]), raio * 2.5, [distancia * 3, 0.0, 0.0], [0.0, 1.1, 0.0]),  # Jupiter
     ]
 
-    massas = [objeto.massa for objeto in objetos]
-    g = 1.0
-
-    posicoes = np.array([objeto.posicao_inicial for objeto in objetos])
-    velocidades = np.array([objeto.velocidade_inicial for objeto in objetos])
+    # dados fisicos dos corpos
+    massas = [objeto.massa for objeto in corpos]
+    posicoes = np.array([objeto.posicao_inicial for objeto in corpos])
+    velocidades = np.array([objeto.velocidade_inicial for objeto in corpos])
     aceleracoes = aceleracao(posicoes, massas, g)
+
+    # inicia pygame
+    pygame.init()
+    largura, altura = 800, 600
+    pygame.display.set_mode((largura, altura), DOUBLEBUF | OPENGL)
 
     init_opengl(largura, altura)
 
@@ -135,8 +77,10 @@ def main():
 
             camera_distance = max(3, min(camera_distance, 50))
 
-        angulo += 60 * clock.get_time() / 1000
-        dt = 0.01
+        if rodando is False: break
+
+        angulo += 60 * clock.get_time() / 1000  # mantem a esfera rotacionando
+        dt = 0.01  # intervalo de tempo entre iteracoes no algoritmo de Verlet
 
         # reinicia matriz a cada iteracao
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
@@ -149,21 +93,82 @@ def main():
 
         posicoes, aceleracoes = atualiza_movimento(posicoes, velocidades, aceleracoes, massas, g, dt)
 
-        for i, objeto in enumerate(objetos):
+        # os dois loops seguintes sao para criar o rastro do corpo no espaco
+        for i, objeto in enumerate(corpos):
             if i > 0:
                 objeto.rastro.append(tuple(posicoes[i]))
 
-        for i, objeto in enumerate(objetos):
+        for i, objeto in enumerate(corpos):
             if i > 0:
                 desenha_rastro(objeto.rastro)
 
-        for i, objeto in enumerate(objetos):
+        for i, objeto in enumerate(corpos):
             cria_esfera(quadric, objeto.raio, slices, stacks, angulo, posicoes[i], objeto.cor)
 
         pygame.display.flip()
         clock.tick(60)
 
     pygame.quit()
+
+
+def init_opengl(largura: int, altura: int):
+    # inicia ambiente
+    glEnable(GL_DEPTH_TEST)
+    glClearColor(0.0, 0.0, 0.0, 1.0)
+
+    glMatrixMode(GL_PROJECTION)
+    glLoadIdentity()
+
+    gluPerspective(45, largura / altura, 0.1, 100.0)
+    glMatrixMode(GL_MODELVIEW)
+
+    # habilita luz
+    glEnable(GL_LIGHTING)
+    glEnable(GL_LIGHT0)
+    glEnable(GL_COLOR_MATERIAL)
+
+    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
+
+    glLightfv(GL_LIGHT0, GL_POSITION, (5.0, 5.0, 5.0, 1.0))
+    glLightfv(GL_LIGHT0, GL_AMBIENT, (0.2, 0.2, 0.2, 1.0))
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, (0.8, 0.8, 0.8, 1.0))
+    glLightfv(GL_LIGHT0, GL_SPECULAR, (1.0, 1.0, 1.0, 1.0))
+
+    # transparencia
+    glEnable(GL_BLEND)
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+
+
+def objeto_inicio(slices: int = 20, stacks: int = 20):
+    quadric = gluNewQuadric()
+    gluQuadricNormals(quadric, GLU_SMOOTH)
+    return quadric, slices, stacks
+
+
+def cria_esfera(quadric, raio, slices, stacks, angulo, posicao, cor):
+    glPushMatrix()
+    glTranslatef(*posicao)
+    glRotatef(angulo, 0, 1, 0)
+    glColor3f(*cor)
+    gluSphere(quadric, raio, slices, stacks)
+    glPopMatrix()
+
+
+def desenha_rastro(pontos):
+    if len(pontos) < 2:
+        return
+
+    glDisable(GL_LIGHTING)
+    glDisable(GL_DEPTH_TEST)
+
+    glColor3f(1.0, 1.0, 1.0)
+    glBegin(GL_LINE_STRIP)
+    for p in pontos:
+        glVertex3f(p[0], p[1], p[2])
+    glEnd()
+
+    glEnable(GL_DEPTH_TEST)
+    glEnable(GL_LIGHTING)
 
 
 if __name__ == "__main__":

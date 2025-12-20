@@ -19,7 +19,7 @@ FEITO > Update posição, velocidade e aceleração
     . Euler
         . x(t+Δt) = x(t) + v(t) * Δt
         . v(t+Δt) = v(t) + a(t) * Δt
-    . Método de Verlet (melhor)
+    . Método de Verlet (mais preciso)
         . x(t+Δt) = x(t) + v(t)Δt + 0.5 * a(t) * Δt^2
         . v(t+Δt) = v(t) + 0.5 * (a(t) + a(t+Δt)) * Δt
 FEITO > Coloca mais um objeto e testa novamente

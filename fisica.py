@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def aceleracao(posicoes, massas, g):
+def aceleracao(posicoes: np.array, massas: list, g: float):
     a = np.zeros_like(posicoes)
     n = len(posicoes)
     for i in range(n):
@@ -13,7 +13,7 @@ def aceleracao(posicoes, massas, g):
     return a
 
 
-def atualiza_movimento(posicoes, velocidades, aceleracoes, massas, g, dt):
+def atualiza_movimento(posicoes: np.array, velocidades: np.array, aceleracoes: np.array, massas: list, g: float, dt: float):
     posicoes += velocidades * dt + aceleracoes * 0.5 * dt ** 2
 
     aceleracoes_new = aceleracao(posicoes, massas, g)
