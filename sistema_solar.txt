@@ -1,0 +1,52 @@
+> Sol
+Massa = 1,989e30 kg
+Raio = 6,9634e8 m
+Cor = Amarelo, RGB(1, 1, 0)
+
+> Mercúrio
+Massa = 3,30e23 kg
+Raio = 2,4397e6 m
+Distância Sol = 5,79e10 m
+Cor = Cinza, RGB(0.5, 0.5, 0.5)
+
+> Vênus
+Massa = 4,87e24 kg
+Raio = 6,0518e6 m
+Distância Sol = 1,082e11 m
+Cor = Amarelo-claro, RGB(0.9, 0.8, 0.6)
+
+> Terra
+Massa = 5,97e24 kg
+Raio = 6,371e6 m
+Distância Sol = 1,496e11 m
+Cor = Azul, RGB(0.2, 0.4, 0.8)
+
+> Marte
+Massa = 6,42e23 kg
+Raio = 3,3895e6 m
+Distância Sol = 2,279e11 m
+Cor = Vermelho, RGB(0.8, 0.3, 0.2)
+
+> Júpiter
+Massa = 1,898e27 kg
+Raio = 6,9911e7 m
+Distância Sol = 7,785e11 m
+Cor = Marrom-alaranjado, RGB(0.8, 0.6, 0.4)
+
+> Saturno
+Massa = 5,68e26 kg
+Raio = 5,8232e7 m
+Distância Sol = 1,433e12 m
+Cor = Amarelo-pálido, RGB(0.9, 0.85, 0.6)
+
+> Urano
+Massa = 8,68e25 kg
+Raio = 2,5362e7 m
+Distância Sol = 2,872e12 m
+Cor = Ciano, RGB(0.6, 0.8, 0.9)
+
+> Netuno
+Massa = 1,02e26 kg
+Raio = 2,4622e7 m
+Distância Sol = 4,495e12 m
+Cor = Azul-escuro, RGB(0.2, 0.3, 0.7)

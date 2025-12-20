@@ -8,7 +8,7 @@ def aceleracao(posicoes, massas, g):
         for j in range(n):
             if i != j:
                 r = posicoes[j] - posicoes[i]
-                d = np.linalg.norm(r) + 0.2  # distancia + um pequeno drift
+                d = np.linalg.norm(r) + 0.0  # distancia entre os corpos + um pequeno drift
                 a[i] += massas[j] * g * r / d ** 3
     return a
 

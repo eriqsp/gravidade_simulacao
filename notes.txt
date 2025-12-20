@@ -31,5 +31,5 @@ FEITO > Alterar OpenGL
     . movimento do mouse para alterar a view
     . traços das orbitas
     . grid espaço-tempo (curvado)
-> Colocar planetas do sistema solar
+FEITO > Colocar planetas do sistema solar
 > Organizar o código

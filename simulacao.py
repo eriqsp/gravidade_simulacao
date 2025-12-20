@@ -68,16 +68,18 @@ def desenha_rastro(pontos):
 
 def main():
     pygame.init()
-    largura, altura = 800, 600
+    largura, altura = 1600, 1200
     pygame.display.set_mode((largura, altura), DOUBLEBUF | OPENGL)
 
     massa = 1
-    raio = 0.3
+    raio = 0.2
+    distancia = 25.0
 
     objetos = [
-        Corpo(massa * 10, np.array([1.0, 1.0, 0.0]), raio * 2, [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]),
-        Corpo(massa, np.array([0.0, 0.0, 1.0]), raio, [3.0, 0.0, 0.0], [0.0, 1.1, 0.0]),
-        Corpo(massa, np.array([1.0, 0.0, 0.0]), raio, [-3.0, 0.0, 0.0], [0.0, -1.1, 0.0])
+        Corpo(massa * 300, np.array([1.0, 1.0, 0.0]), raio * 6, [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]),  # Sol
+        Corpo(massa, np.array([0.2, 0.4, 0.8]), raio, [distancia, 0.0, 0.0], [0.0, 1.1, 0.0]),  # Terra
+        Corpo(massa * 0.1, np.array([0.8, 0.3, 0.2]), raio * 0.5, [distancia * 1.5, 0.0, 0.0], [0.0, -1.1, 0.0]),  # Marte
+        Corpo(massa * 10, np.array([0.8, 0.6, 0.4]), raio * 2.5, [distancia * 3, 0.0, 0.0], [0.0, 1.1, 0.0]),  # Jupiter
     ]
 
     massas = [objeto.massa for objeto in objetos]
@@ -95,7 +97,7 @@ def main():
 
     # parametros para zoom e mudanca de fov
     zoom = 1.0
-    camera_distance = 10
+    camera_distance = 50
     rot_x, rot_y = 20, -30
     mouse_down = False
 
