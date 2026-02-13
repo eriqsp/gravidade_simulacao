@@ -1,4 +1,4 @@
-<img width="790" height="618" alt="image" src="https://github.com/user-attachments/assets/6cf493a2-13dd-4e85-99d9-a56f635da623" />
+<img width="1000" height="500" alt="image" src="https://github.com/user-attachments/assets/6cf493a2-13dd-4e85-99d9-a56f635da623" />
 
 # Simulação da Gravidade Newtoniana
 Nesse projeto eu simulo a gravidade descrita pela teoria de Newton usando Python, OpenGL e Pygame.
